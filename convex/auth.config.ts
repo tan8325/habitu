@@ -1,7 +1,7 @@
 export default {
   providers: [
     {
-      domain: "https://enabled-cicada-26.clerk.accounts.dev",
+      domain: "https://amusing-mouse-48.clerk.accounts.dev",
       applicationID: "convex",
     },
   ]
