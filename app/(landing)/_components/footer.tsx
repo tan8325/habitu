@@ -11,7 +11,7 @@ const font = Poppins({
 export const Footer = () => {
   return (
     <div className="flex items-center w-full p-6 bg-background z-50 dark:bg-[#1F1F1F]">
-      <p className={cn("font-semibold", font.className)}>
+      <p className={cn("font-semibold", font.className, "hidden", "md:flex")}>
         HabitU
       </p>
       <div className="md:ml-auto w-full justify-between md:justify-end flex items-center gap-x-2 text-muted-foreground">
