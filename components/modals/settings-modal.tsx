@@ -3,20 +3,31 @@
 import {
   Dialog,
   DialogContent,
-  DialogHeader
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
-import { useModalStore } from "@/hooks/use-modal-store"; // Adjust the path as needed
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
+import { Settings } from "lucide-react";
 
 export const SettingsModal = () => {
-  const { openModal, close } = useModalStore();
-
   return (
-    <Dialog open={openModal === 'settings'} onOpenChange={close}>
-      <DialogContent>
+    <Dialog>
+      <DialogTrigger asChild>
+      <Button
+  variant="ghost"
+  className="group min-h-[27px] text-md py-6 pr-3 w-full hover:bg-primary/5 flex items-center text-muted-foreground font-medium pl-3"
+>
+  <Settings className="shrink-1 h-[18px] text-muted-foreground mr-1 " />
+  <span className="flex-1 text-left">Settings</span>
+</Button>
+
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader className="border-b pb-3">
-          <h2 className="text-lg font-medium">My settings</h2>
+          <DialogTitle>My Settings</DialogTitle>
         </DialogHeader>
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-y-1">

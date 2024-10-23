@@ -1,17 +1,16 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, LandPlot, Mail, MenuIcon, NotebookTabs, PersonStanding, Settings } from "lucide-react";
+import { ChevronsLeft, LandPlot, Mail, MenuIcon, NotebookTabs, PersonStanding } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
-import { useModalStore } from "@/hooks/use-modal-store";
 import { useMediaQuery } from "usehooks-ts";
 import { Profile } from "./profile";
 import { Item } from "./sidebar-nav";
+import { SettingsModal } from "@/components/modals/settings-modal";
 
 
 export const Sidebar = () => {
-  const { open } = useModalStore();
   const pathname = usePathname();
   const router = useRouter();
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -99,7 +98,7 @@ export const Sidebar = () => {
           <Item onClick={() => handleRedirect("/notifications")} label="Notifications" icon={Mail} />
           <Item onClick={() => handleRedirect("/challenges")} label="Challenges" icon={LandPlot} />
           <Item onClick={() => {}} label="Smart Fitness Planner" icon={NotebookTabs} />
-          <Item   onClick={() => open('settings')} label="Settings" icon={Settings} />
+          <SettingsModal />
         </div>
         <div
           onMouseDown={handleMouseDown}

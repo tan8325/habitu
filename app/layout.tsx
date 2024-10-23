@@ -4,7 +4,6 @@ import { Inter } from 'next/font/google'
 
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import { Providers } from '@/components/providers/convex-provider'
-import { ModalProvider } from "@/components/providers/modal-provider"
 
 import './globals.css'
 
@@ -45,7 +44,6 @@ export default function RootLayout({
             storageKey='habitu-theme'
           >
             <Toaster position="bottom-center" />
-            <ModalProvider />
             <Providers>{children}</Providers>
             </ThemeProvider>
       </body>

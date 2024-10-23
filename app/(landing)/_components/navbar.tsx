@@ -46,7 +46,6 @@ export const Navbar = () => {
               </Link>
             </Button>
             <UserButton
-              afterSignOutUrl="/"
             />
           </>
         )}
