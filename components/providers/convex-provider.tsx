@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { ClerkProvider, useAuth } from "@clerk/clerk-react";
@@ -15,6 +15,12 @@ export const Providers = ({
   children: ReactNode;
 }) => {
   const { resolvedTheme, setTheme } = useTheme()
+
+  useEffect(() => {
+    const actualTheme = localStorage.getItem('habitu-theme')
+    setTheme(actualTheme || 'system')
+  }, [setTheme])
+
   return (
     <ClerkProvider
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
