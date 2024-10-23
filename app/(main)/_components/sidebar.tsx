@@ -4,11 +4,14 @@ import { cn } from "@/lib/utils";
 import { ChevronsLeft, LandPlot, Mail, MenuIcon, NotebookTabs, PersonStanding, Settings } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
+import { useModalStore } from "@/hooks/use-modal-store";
 import { useMediaQuery } from "usehooks-ts";
-import { UserItem } from "./user-item";
-import { Item } from "./item";
+import { Profile } from "./profile";
+import { Item } from "./sidebar-nav";
 
-export const Navigation = () => {
+
+export const Sidebar = () => {
+  const { open } = useModalStore();
   const pathname = usePathname();
   const router = useRouter();
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -81,22 +84,22 @@ export const Navigation = () => {
     <>
       <aside
         ref={sidebarRef}
-        className={cn("group/sidebar h-full bg-secondary overflow-y-auto relative flex w-60 flex-col z-[99999]", isResetting && "transition-all ease-in-out duration-300", isMobile && "w-0")}
+        className={cn("group/sidebar h-full bg-secondary overflow-y-auto relative flex w-60 flex-col", isResetting && "transition-all ease-in-out duration-300", isMobile && "w-0")}
       >
         <div
           onClick={collapse}
           role="button"
           className={cn("h-6 w-6 text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute top-3 right-2 opacity-0 group-hover/sidebar:opacity-100 transition", isMobile && "opacity-100")}
         >
-          <ChevronsLeft className="h-6 w-6" />
+        <ChevronsLeft className="h-6 w-6" />
         </div>
         <div>
-          <UserItem />
+          <Profile />
           <Item onClick={() => handleRedirect("/")} label="Habits" icon={PersonStanding} />
           <Item onClick={() => handleRedirect("/notifications")} label="Notifications" icon={Mail} />
           <Item onClick={() => handleRedirect("/challenges")} label="Challenges" icon={LandPlot} />
           <Item onClick={() => {}} label="Smart Fitness Planner" icon={NotebookTabs} />
-          <Item onClick={() => {}} label="Settings" icon={Settings} />
+          <Item   onClick={() => open('settings')} label="Settings" icon={Settings} />
         </div>
         <div
           onMouseDown={handleMouseDown}
@@ -106,7 +109,7 @@ export const Navigation = () => {
       </aside>
       <div
         ref={navbarRef}
-        className={cn("absolute top-0 z-[99999] left-60 w-[calc(100%-240px)]", isResetting && "transition-all ease-in-out duration-300", isMobile && "left-0 w-full")}
+        className={cn("absolute top-0 left-60 w-[calc(100%-240px)]", isResetting && "transition-all ease-in-out duration-300", isMobile && "left-0 w-full")}
       >
         <nav className="bg-transparent px-3 py-2 w-full">
           {isCollapsed && <MenuIcon onClick={resetWidth} role="button" className="w-6 text-muted-foreground" />}

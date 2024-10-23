@@ -20,6 +20,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["./**/*"],
+  "include": ["./**/*", "../app/(main)/_components/function.js"],
   "exclude": ["./_generated"]
 }
