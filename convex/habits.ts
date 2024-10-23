@@ -12,10 +12,7 @@ export const getHabits = query({
     const userId = identity.subject;
     const habits = await ctx.db
       .query("habits")
-      .withIndex("by_user", (q) =>
-        q
-          .eq("userId", userId)
-      )
+      .withIndex("by_user", (q) => q.eq("userId", userId))
       .order("desc")
       .collect();
 
