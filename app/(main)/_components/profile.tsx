@@ -4,7 +4,8 @@ export const Profile = () => {
   return (
     <>
       <div className="flex items-center hover:bg-primary/5">
-      <UserButton
+      <UserButton 
+        afterSignOutUrl="/"
         appearance={{
           elements: {
             userButtonBox: {
