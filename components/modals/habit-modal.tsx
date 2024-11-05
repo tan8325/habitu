@@ -1,10 +1,8 @@
-import { Plus, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -14,15 +12,19 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
 interface HabitModalProps {
-  onSubmit: (title: string) => void;
+  onSubmit: (title: string, goal: number) => void;
 }
 
 export const HabitModal = ({ onSubmit }: HabitModalProps) => {
   const [title, setTitle] = useState("");
+  const [goal, setGoal] = useState<number | "">("");
 
-  const handleSubmit = () => {
-    onSubmit(title);
-    setTitle("");
+  const handleSubmit = (): void => {
+    if (title && typeof goal === "number" && goal > 0) {
+      onSubmit(title, goal);
+      setTitle("");
+      setGoal("");
+    }
   };
 
   return (
@@ -37,11 +39,9 @@ export const HabitModal = ({ onSubmit }: HabitModalProps) => {
         <DialogHeader>
           <DialogTitle>Create a Habit</DialogTitle>
         </DialogHeader>
-        <div className="flex items-center space-x-2">
-          <div className="grid flex-1 gap-2">
-            <Label htmlFor="habit-title" className="sr-only">
-              Habit Title
-            </Label>
+        <div className="grid gap-4">
+          <div>
+            <Label htmlFor="habit-title">Habit Title</Label>
             <Input
               id="habit-title"
               value={title}
@@ -49,18 +49,28 @@ export const HabitModal = ({ onSubmit }: HabitModalProps) => {
               placeholder="Enter your habit title"
             />
           </div>
-          <Button onClick={handleSubmit} type="button" size="sm" className="px-3">
+          <div>
+            <Label htmlFor="habit-goal">Habit Goal</Label>
+            <Input
+              id="habit-goal"
+              type="number"
+              min="1"
+              value={goal === "" ? "" : goal}
+              onChange={(e) => setGoal(e.target.value ? Math.max(1, parseInt(e.target.value)) : "")}
+              placeholder="Enter your habit goal"
+            />
+          </div>
+          <Button
+            onClick={handleSubmit}
+            type="button"
+            size="sm"
+            className="px-3 mt-4"
+            disabled={!title || (typeof goal === "number" && goal <= 0)}
+          >
             <span className="sr-only">Submit</span>
-            <Plus className="h-4 w-4" />
+            Submit
           </Button>
         </div>
-        <DialogFooter className="sm:justify-start">
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              Close
-            </Button>
-          </DialogClose>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

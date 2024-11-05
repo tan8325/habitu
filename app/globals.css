@@ -8,6 +8,7 @@ body,
 :root {
   height: 100%;
 }
+
 @layer base {
 
   :root {
@@ -87,7 +88,7 @@ body,
     --chart-5: 340 75% 55%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
@@ -95,5 +96,109 @@ body,
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.habit-tracker-grid {
+  display: grid;
+  grid-template-columns: 150px repeat(31, 40px) 60px 60px;
+}
+
+.header-row, .habit-row {
+  display: contents;
+}
+
+.habit-cell, .habit-name, .goal-cell, .achieved-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  padding: 8px;
+  height: 40px;
+  font-size: 16px;
+}
+
+.habit-cell{
+  @apply dark:text-black;
+}
+
+.goal-cell{
+  cursor: default;
+}
+
+.achieved-cell {
+  border-right: 1px solid #ddd;
+  @apply dark:text-black;
+  cursor: default;
+}
+
+.habit-cell:hover, .habit-name:hover {
+  background-color: #d1cfcf;
+}
+
+.header-row > div {
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+}
+
+
+
+.header-day-row > div:nth-child(33) {
+  border-left: 1px solid #ddd;
+}
+
+.header-row > div:nth-child(1){
+  border-left: none;
+  border-top: none;
+}
+
+.header-row > div:last-child, .header-row > div:nth-last-child(2) {
+  border-right: none;
+  border-top: none;
+}
+.header-row > div:last-child {
+  border-left: none;
+}
+
+.header-day-row {
+  display: contents;
+  padding: 4px;
+  text-align: center;
+  font-weight: 300;
+}
+
+.header-day {
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+}
+
+.header-day:last-child {
+  border-right: 1px solid #ddd;
+}
+
+.highlight-header {
+  background-color: #424242;
+  font-weight: bold;
+  color: white;
+  border: 1px solid #424242  !important;
+  @apply dark:bg-white dark:text-black dark:border dark:border-white !important;
+  
+}
+
+.highlight {
+  border-left: 1px solid #424242;
+  border-right: 1px solid #424242;
+  @apply dark:text-black  dark:border-white;
+}
+
+
+.bottom-border {
+  border-bottom: 1px solid #424242;
+  @apply  dark:border-white;
+
 }
 

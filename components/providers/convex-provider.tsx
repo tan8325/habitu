@@ -9,7 +9,7 @@ import { dark } from '@clerk/themes'
 
 const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
-export const Providers = ({
+export const ConvexProviders = ({
   children
 }: {
   children: ReactNode;

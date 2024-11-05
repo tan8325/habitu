@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
 import { ThemeProvider } from '@/components/providers/theme-provider'
-import { Providers } from '@/components/providers/convex-provider'
+import { ConvexProviders } from '@/components/providers/convex-provider'
 
 import './globals.css'
 
@@ -43,8 +43,8 @@ export default function RootLayout({
             disableTransitionOnChange
             storageKey='habitu-theme'
           >
-            <Toaster position="bottom-center" />
-            <Providers>{children}</Providers>
+            <Toaster position="top-right" />
+            <ConvexProviders>{children}</ConvexProviders>
             </ThemeProvider>
       </body>
     </html>
