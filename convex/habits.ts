@@ -64,9 +64,12 @@ export const toggleCompletedDateForHabit = mutation({
       throw new Error("Habit not found or unauthorized");
     }
 
+    // Use fallback for completedDates if it's undefined
+    const currentCompletedDates = habit.completedDates || [];
+
     const updatedCompletedDates = add
-      ? [...new Set([...habit.completedDates, date])]
-      : habit.completedDates.filter((completedDate) => completedDate !== date);
+      ? [...new Set([...currentCompletedDates, date])] // Add date if 'add' is true
+      : currentCompletedDates.filter((completedDate) => completedDate !== date); // Remove date if 'add' is false
 
     await ctx.db.patch(habitId, { completedDates: updatedCompletedDates });
 
