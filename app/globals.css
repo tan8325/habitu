@@ -117,6 +117,9 @@ body,
   padding: 8px;
   height: 40px;
   font-size: 16px;
+  word-wrap: break-word;
+  white-space: normal;
+  overflow: hidden;
 }
 
 .habit-cell{
@@ -144,8 +147,6 @@ body,
   border-left: 1px solid #ddd;
   border-top: 1px solid #ddd;
 }
-
-
 
 .header-day-row > div:nth-child(33) {
   border-left: 1px solid #ddd;
@@ -195,10 +196,7 @@ body,
   @apply dark:text-black  dark:border-white;
 }
 
-
 .bottom-border {
   border-bottom: 1px solid #424242;
   @apply  dark:border-white;
-
 }
-

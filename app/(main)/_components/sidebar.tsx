@@ -96,7 +96,7 @@ export const Sidebar = () => {
           <Profile />
           <Item onClick={() => handleRedirect("/")} label="Habits" icon={PersonStanding} />
           <Item onClick={() => handleRedirect("/notifications")} label="Notifications" icon={Mail} />
-          <Item onClick={() => handleRedirect("/challenges")} label="Challenges" icon={LandPlot} />
+          <Item onClick={() => handleRedirect("/leaderboard")} label="Leaderboard" icon={LandPlot} />
           <Item onClick={() => {}} label="Smart Fitness Planner" icon={NotebookTabs} />
           <SettingsModal />
         </div>
@@ -116,4 +116,4 @@ export const Sidebar = () => {
       </div>
     </>
   );
-};
+}
