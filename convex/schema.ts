@@ -6,7 +6,7 @@ export default defineSchema({
     title: v.string(),
     userId: v.string(),
     goal: v.number(),
-    completedDates: v.array(v.string()),
+    completedDates: v.optional(v.array(v.string())), // Make completedDates optional
     createdMonth: v.string(),
   }).index("by_user", ["userId"]),
 });
