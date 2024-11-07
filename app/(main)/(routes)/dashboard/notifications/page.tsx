@@ -11,7 +11,7 @@ const Notifications = () => {
   ]);
   const [isLoading, setLoading] = useState(false); 
 
-  const markAsRead = (id) => {
+  const markAsRead = (id: number) => {
     setNotifications(prevNotifications =>
       prevNotifications.map(notification =>
         notification.id === id ? { ...notification, read: true } : notification
