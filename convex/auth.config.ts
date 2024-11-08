@@ -1,7 +1,7 @@
 export default {
   providers: [
     {
-      domain: "https://clerk.habitu.app",
+      domain: "https://amusing-mouse-48.clerk.accounts.dev",
       applicationID: "convex",
     },
   ]
