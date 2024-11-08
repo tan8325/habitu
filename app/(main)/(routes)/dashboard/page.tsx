@@ -8,6 +8,7 @@ import { EditHabitModal } from "@/components/modals/edit-habit-modal";
 import { useState, useEffect } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Spinner } from "@/components/spinner";
 import { Id } from "@/convex/_generated/dataModel";
 
 const Dashboard: React.FC = () => {
@@ -31,6 +32,8 @@ const Dashboard: React.FC = () => {
 
   const rowColors = ["#fbeec8", "#b6d8c6", "#c4d2f1", "#d3c9e3"];
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (habits) {
       const initialStatus = habits.reduce((acc, habit) => {
@@ -45,25 +48,25 @@ const Dashboard: React.FC = () => {
       }, {} as Record<string, Record<number, boolean>>);
 
       setHabitCompletionStatus(initialStatus);
+      setLoading(false);
     }
   }, [habits, currentDate]);
 
   const toggleHabitCompletion = async (habitId: string, day: number) => {
     const date = currentDate.date(day).format("YYYY-MM-DD");
     const isCompleted = habitCompletionStatus[habitId]?.[day];
-  
+
     setHabitCompletionStatus((prev) => ({
       ...prev,
       [habitId]: { ...prev[habitId], [day]: !isCompleted },
     }));
-  
+
     toast.promise(toggleCompletion({ habitId: habitId as Id<"habits">, date, add: !isCompleted }), {
       loading: "Updating habit...",
       success: isCompleted ? "Habit marked as incomplete!" : "Habit marked as completed!",
       error: "Failed to update habit",
     });
   };
-  
 
   const changeDisplayedMonth = (direction: number) => setCurrentDate((prev) => prev.add(direction, "month"));
 
@@ -99,7 +102,7 @@ const Dashboard: React.FC = () => {
     setIsEditModalOpen(false);
     setSelectedHabit(null);
   };
-  
+
   const handleDeleteHabit = async (id: string) => {
     await toast.promise(deleteHabit({ habitId: id as Id<"habits"> }), {
       loading: "Deleting habit...",
@@ -109,7 +112,14 @@ const Dashboard: React.FC = () => {
     setIsEditModalOpen(false);
     setSelectedHabit(null);
   };
-  
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col items-center justify-center space-y-4">
@@ -119,67 +129,68 @@ const Dashboard: React.FC = () => {
         <button onClick={() => changeDisplayedMonth(1)}><ChevronRight /></button>
       </div>
 
-      <div className="habit-tracker-grid">
-        <div className="header-day-row">
-          <div></div>
-          {generateDaysArray().map((dayName, index) => (
-            <div key={index} className={`header-day ${isCurrentMonth && index === todayDate - 1 ? "highlight-header" : ""}`}>
-              {dayName || ""}
+      {habits && habits.length > 0 ? (
+        <div className="habit-tracker-grid">
+          <div className="header-day-row">
+            <div></div>
+            {generateDaysArray().map((dayName, index) => (
+              <div key={index} className={`header-day ${isCurrentMonth && index === todayDate - 1 ? "highlight-header" : ""}`}>
+                {dayName || ""}
+              </div>
+            ))}
+            <div></div>
+            <div></div>
+          </div>
+
+          <div className="header-row">
+            <div className="text-blue-700">Habits</div>
+            {[...Array(31)].map((_, day) => (
+              <div key={day + 1} className={`header-number ${isCurrentMonth && day + 1 === todayDate ? "highlight-header" : ""}`}>
+                {day + 1 <= totalDaysInMonth ? day + 1 : ""}
+              </div>
+            ))}
+            <div className="text-blue-700">Goal</div>
+            <div className="text-blue-700">Done</div>
+          </div>
+
+          {habits.map((habit, habitIndex) => (
+            <div
+            key={habit._id}
+            className={`habit-row ${habit.isCompleted ? "completed-habit" : ""} ${habitIndex === habits.length - 1 ? "bottom-border" : ""}`}
+            style={{ backgroundColor: rowColors[habitIndex % rowColors.length] }}
+          >
+              <div className="habit-name" onClick={() => openEditModal(habit)}>
+                {habit.title}
+              </div>
+              {[...Array(31)].map((_, day) => {
+                const isToday = isCurrentMonth && day + 1 === todayDate;
+                const isLastRow = habitIndex === habits.length - 1;
+
+                return (
+                  <div
+                    key={day + 1}
+                    onClick={() => {
+                      if (day + 1 <= totalDaysInMonth) {
+                        toggleHabitCompletion(habit._id, day + 1);
+                      }
+                    }}
+                    className={`habit-cell ${habitCompletionStatus[habit._id]?.[day + 1] ? "completed" : ""} ${isToday ? "highlight" : ""} ${isToday && isLastRow ? "bottom-border" : ""}`}
+                    style={{ backgroundColor: habitCompletionStatus[habit._id]?.[day + 1] ? rowColors[habitIndex % rowColors.length] : '' }}
+                  >
+                    {day + 1 <= totalDaysInMonth && habitCompletionStatus[habit._id]?.[day + 1] && "✔"}
+                  </div>
+                );
+              })}
+              <div className="goal-cell">{habit.goal || "N/A"}</div>
+              <div className="achieved-cell" style={{ backgroundColor: Object.values(habitCompletionStatus[habit._id] || {}).filter(Boolean).length < habit.goal ? '#fdfc47' : '#05db94' }}>
+                {Object.values(habitCompletionStatus[habit._id] || {}).filter(Boolean).length}
+              </div>
             </div>
           ))}
-          <div></div>
-          <div></div>
         </div>
-
-        <div className="header-row">
-          <div className="text-blue-700">Habits</div>
-          {[...Array(31)].map((_, day) => (
-            <div key={day + 1} className={`header-number ${isCurrentMonth && day + 1 === todayDate ? "highlight-header" : ""}`}>
-              {day + 1 <= totalDaysInMonth ? day + 1 : ""}
-            </div>
-          ))}
-          <div className="text-blue-700">Goal</div>
-          <div className="text-blue-700">Done</div>
-        </div>
-
-        {habits?.map((habit, habitIndex) => (
-  <div
-    key={habit._id}
-    className={`habit-row ${habitIndex === habits.length - 1 ? "bottom-border" : ""}`}
-    style={{ backgroundColor: rowColors[habitIndex % rowColors.length] }}
-  >
-    <div
-      className="habit-name"
-      onClick={() => openEditModal(habit)}
-    >
-      {habit.title}
-    </div>
-    {[...Array(31)].map((_, day) => {
-      const isToday = isCurrentMonth && day + 1 === todayDate;
-      const isLastRow = habitIndex === habits.length - 1;
-
-      return (
-        <div
-          key={day + 1}
-          onClick={() => {
-            if (day + 1 <= totalDaysInMonth) {
-              toggleHabitCompletion(habit._id, day + 1);
-            }
-          }}
-          className={`habit-cell ${habitCompletionStatus[habit._id]?.[day + 1] ? "completed" : ""} ${isToday ? "highlight" : ""} ${isToday && isLastRow ? "bottom-border" : ""}`}
-          style={{ backgroundColor: habitCompletionStatus[habit._id]?.[day + 1] ? rowColors[habitIndex % rowColors.length] : '' }}
-        >
-          {day + 1 <= totalDaysInMonth && habitCompletionStatus[habit._id]?.[day + 1] && "✔"}
-        </div>
-      );
-    })}
-    <div className="goal-cell">{habit.goal || "N/A"}</div>
-    <div className="achieved-cell" style={{ backgroundColor: Object.values(habitCompletionStatus[habit._id] || {}).filter(Boolean).length < habit.goal ? '#fdfc47' : '#05db94' }}>
-      {Object.values(habitCompletionStatus[habit._id] || {}).filter(Boolean).length}
-    </div>
-  </div>
-))}
-      </div>
+      ) : (
+        <p className="text-gray-500 mt-4">Create your first habit by clicking on &quot;Add habit&quot;</p>
+      )}
 
       <HabitModal onSubmit={handleCreateHabit} />
 
