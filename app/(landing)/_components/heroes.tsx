@@ -4,7 +4,7 @@ export const Heroes = () => {
     return (
         <div className="flex items-center justify-center">
           <Image
-            src="/desktop.png"
+            src="/desktop-light.png"
             alt="laptop"
             loading="lazy"
             width="1000"
