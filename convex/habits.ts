@@ -1,14 +1,14 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
-// Helper function for user authentication
-async function authenticateUser(ctx: any) {
+async function authenticateUser(ctx: { auth: { getUserIdentity: () => Promise<{ subject: string } | null> } }): Promise<string> {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
     throw new Error("Not authenticated");
   }
   return identity.subject;
 }
+
 export const getCompletedHabits = mutation({
   args: { userId: v.string() },
   handler: async (ctx, { userId }) => {
@@ -17,14 +17,18 @@ export const getCompletedHabits = mutation({
       .query("habits")
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .collect();
-      
-    // Filter habits that are completed and count them
-    const completedHabitsCount = habits.filter(habit => habit.isCompleted).length;
 
-    return completedHabitsCount;  // Return the count of completed habits
+    // Map _id to id for each habit and filter completed habits
+    const completedHabitsCount = habits
+      .map(habit => ({
+        ...habit,
+        id: habit._id,  // Mapping _id to id
+      }))
+      .filter(habit => habit.isCompleted).length;
+
+    return completedHabitsCount; // Return the count of completed habits
   },
 });
-
 
 // Get habits for a specific month
 export const getHabits = query({
@@ -37,11 +41,12 @@ export const getHabits = query({
       .collect();
 
     return habits
-      .filter((habit) => habit.createdMonth === month)
-      .map((habit) => ({
+      .map(habit => ({
         ...habit,
+        id: habit._id, // Mapping _id to id
         completedDates: habit.completedDates || [], // Ensure completedDates is an array
-      }));
+      }))
+      .filter((habit) => habit.createdMonth === month);
   },
 });
 
@@ -57,7 +62,7 @@ export const createHabits = mutation({
     }
 
     // Insert the new habit into the database
-    return await ctx.db.insert("habits", {
+    const habitId = await ctx.db.insert("habits", {
       title,
       userId,
       goal,
@@ -65,6 +70,17 @@ export const createHabits = mutation({
       createdMonth: month,
       isCompleted: false,
     });
+
+    const newHabit = await ctx.db.get(habitId);
+    if (!newHabit) {
+      throw new Error("Failed to create habit");
+    }
+
+    // Map _id to id for consistency with Habit interface
+    return {
+      ...newHabit,
+      id: newHabit._id,
+    };
   },
 });
 
@@ -80,13 +96,19 @@ export const toggleCompletedDateForHabit = mutation({
       throw new Error("Habit not found or unauthorized");
     }
 
+    // Map _id to id for consistency with Habit interface
+    const updatedHabit = {
+      ...habit,
+      id: habit._id, // Mapping _id to id
+    };
+
     // Update the completedDates array based on the action
     const updatedCompletedDates = add
-      ? [...new Set([...habit.completedDates, date])]
-      : habit.completedDates.filter((completedDate) => completedDate !== date);
+      ? [...new Set([...updatedHabit.completedDates, date])]
+      : updatedHabit.completedDates.filter((completedDate) => completedDate !== date);
 
     // Check if the habit's goal has been reached
-    const isGoalReached = updatedCompletedDates.length >= habit.goal;
+    const isGoalReached = updatedCompletedDates.length >= updatedHabit.goal;
 
     // Update the habit in the database, marking it as completed if the goal is reached
     await ctx.db.patch(habitId, {
