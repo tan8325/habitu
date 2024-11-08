@@ -104,8 +104,8 @@ export const toggleCompletedDateForHabit = mutation({
 
     // Update the completedDates array based on the action
     const updatedCompletedDates = add
-      ? [...new Set([...updatedHabit.completedDates, date])]
-      : updatedHabit.completedDates.filter((completedDate) => completedDate !== date);
+    ? Array.from(new Set([...updatedHabit.completedDates, date])) // Converts Set to an array
+    : updatedHabit.completedDates.filter((completedDate) => completedDate !== date);
 
     // Check if the habit's goal has been reached
     const isGoalReached = updatedCompletedDates.length >= updatedHabit.goal;
