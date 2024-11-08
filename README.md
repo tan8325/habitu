@@ -22,6 +22,22 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
 
 ```
+### Setup .auth.config.ts file
+
+```js
+create a file at convex/auth.config.ts
+input clerk JWT issuer link
+
+export default {
+  providers: [
+    {
+      domain: "clerk issuer name",
+      applicationID: "convex",
+    },
+  ]
+};
+
+```
 
 ### Setup Convex
 
