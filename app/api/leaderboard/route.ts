@@ -1,3 +1,7 @@
+import { createClerkClient } from '@clerk/nextjs/server';
+
+const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+
 export async function GET() {
   try {
     const userList = await clerkClient.users.getUserList();
@@ -12,3 +16,4 @@ export async function GET() {
     return new Response('Internal Server Error', { status: 500 });
   }
 }
+
