@@ -10,10 +10,12 @@ import dayjs, { Dayjs } from "dayjs";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Spinner } from "@/components/spinner";
 import { Id } from "@/convex/_generated/dataModel";
+import { useUser } from "@clerk/nextjs";
 
 const Dashboard: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<Dayjs>(dayjs());
   const displayedMonth = currentDate.format("YYYY-MM");
+  const { user } = useUser();
 
   const updateHabit = useMutation(api.habits.updateHabit);
   const deleteHabit = useMutation(api.habits.deleteHabit);
@@ -33,6 +35,24 @@ const Dashboard: React.FC = () => {
   const rowColors = ["#fbeec8", "#b6d8c6", "#c4d2f1", "#d3c9e3"];
 
   const [loading, setLoading] = useState(true);
+  
+  const [quote, setQuote] = useState<{ text: string, author: string }>({ text: '', author: '' });
+
+  useEffect(() => {
+    console.log('Fetching quote...');
+    const fetchQuote = async () => {
+      try {
+        const response = await fetch('/api/quote');
+        const data = await response.json();
+        setQuote({ text: data.quote || 'No quote available', author: data.author || 'Unknown' });
+      } catch (error) {
+        console.error('Error fetching quote:', error);
+      }
+    };
+  
+    fetchQuote();
+  }, []);
+  
 
   useEffect(() => {
     if (habits) {
@@ -123,7 +143,15 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col items-center justify-center space-y-4">
-      <div className="flex items-center">
+      <h2 className="text-xl font-medium">
+        Welcome to {user?.firstName}&apos;s Habits
+      </h2>
+      <div className="text-center mt-4 p-4 bg-gray-100 rounded-lg">
+        <blockquote className="text-xl italic">{`"${quote.text}"`}</blockquote>
+        <footer className="mt-2 text-lg">— {quote.author}</footer>
+      </div>
+      
+      <div className="flex items-center mt-6">
         <button onClick={() => changeDisplayedMonth(-1)}><ChevronLeft /></button>
         <h3 className="text-xl mx-4">{monthName} {currentDate.year()}</h3>
         <button onClick={() => changeDisplayedMonth(1)}><ChevronRight /></button>
@@ -155,10 +183,10 @@ const Dashboard: React.FC = () => {
 
           {habits.map((habit, habitIndex) => (
             <div
-            key={habit._id}
-            className={`habit-row ${habit.isCompleted ? "completed-habit" : ""} ${habitIndex === habits.length - 1 ? "bottom-border" : ""}`}
-            style={{ backgroundColor: rowColors[habitIndex % rowColors.length] }}
-          >
+              key={habit._id}
+              className={`habit-row ${habit.isCompleted ? "completed-habit" : ""} ${habitIndex === habits.length - 1 ? "bottom-border" : ""}`}
+              style={{ backgroundColor: rowColors[habitIndex % rowColors.length] }}
+            >
               <div className="habit-name" onClick={() => openEditModal(habit)}>
                 {habit.title}
               </div>

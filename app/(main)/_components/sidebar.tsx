@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, LandPlot, Mail, MenuIcon, NotebookTabs, PersonStanding } from "lucide-react";
+import { Award, ChartPie, ChevronsLeft, LandPlot, Mail, MenuIcon, NotebookTabs, PersonStanding } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
@@ -96,6 +96,8 @@ export const Sidebar = () => {
           <Profile />
           <Item onClick={() => handleRedirect("/")} label="Habits" icon={PersonStanding} />
           <Item onClick={() => handleRedirect("/notifications")} label="Notifications" icon={Mail} />
+          <Item onClick={() => handleRedirect("/achievements")} label="Achievements" icon={Award} />
+          <Item onClick={() => handleRedirect("/summary")} label="Summary Report" icon={ChartPie} />
           <Item onClick={() => handleRedirect("/leaderboard")} label="Leaderboard" icon={LandPlot} />
           <Item onClick={() => {}} label="Smart Fitness Planner" icon={NotebookTabs} />
           <SettingsModal />
