@@ -147,8 +147,8 @@ const Dashboard: React.FC = () => {
         Welcome to {user?.firstName}&apos;s Habits
       </h2>
       <div className="text-center mt-4 p-4 bg-gray-100 rounded-lg">
-        <blockquote className="text-xl italic">{`"${quote.text}"`}</blockquote>
-        <footer className="mt-2 text-lg">— {quote.author}</footer>
+        <blockquote className="text-xl italic dark:text-black">{`"${quote.text}"`}</blockquote>
+        <footer className="mt-2 text-lg dark:text-black">— {quote.author}</footer>
       </div>
       
       <div className="flex items-center mt-6">
