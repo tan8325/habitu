@@ -6,7 +6,9 @@ export const revalidate = 0;
 
 export async function GET() {
   try {
-    const userList = await clerkClient.users.getUserList();
+    const userList = await clerkClient.users.getUserList({
+      limit: 500,
+    });
 
     return new Response(JSON.stringify(userList.data), {
       status: 200,
