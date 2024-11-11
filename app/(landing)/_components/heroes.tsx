@@ -9,15 +9,6 @@ export const Heroes = () => {
         loading="lazy"
         width="1000"
         height="500"
-        className="hidden dark:block"
-      />
-      <Image
-        src="/desktop-dark.png"
-        alt="laptop dark"
-        loading="lazy"
-        width="1000"
-        height="500"
-        className="block dark:hidden"
       />
     </div>
   );

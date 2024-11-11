@@ -5,6 +5,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Spinner } from "@/components/spinner";
+import { FacebookShareButton, TwitterShareButton, LinkedinShareButton, FacebookIcon, TwitterIcon, LinkedinIcon } from 'react-share';
 
 interface User {
   id: string;
@@ -127,7 +128,7 @@ export default function Leaderboard() {
         <TableBody>
           {currentUsers.map((user, index) => (
             <TableRow key={user.id} className={index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800'}>
-              <TableCell className="py-3 px-4 text-center">{user.rank}</TableCell>  {/* Dynamically rendered rank */}
+              <TableCell className="py-3 px-4 text-center">{user.rank}</TableCell>
               <TableCell className="py-3 px-4">
                 <div className="flex items-center">
                   {user.imageUrl && <img src={user.imageUrl} alt={user.firstName} className="w-8 h-8 rounded-full mr-3" />}
@@ -166,6 +167,19 @@ export default function Leaderboard() {
         >
           Next
         </button>
+      </div>
+      <div className="flex justify-center space-x-4 mt-5">
+        <FacebookShareButton url={"https://habitu.app"}>
+          <FacebookIcon size={32} round />
+        </FacebookShareButton>
+
+        <TwitterShareButton url={"https://habitu.app"}>
+          <TwitterIcon size={32} round />
+        </TwitterShareButton>
+
+        <LinkedinShareButton url={"https://habitu.app"}>
+          <LinkedinIcon size={32} round />
+        </LinkedinShareButton>
       </div>
     </div>
   );
