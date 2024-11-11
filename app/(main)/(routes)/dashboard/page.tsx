@@ -37,7 +37,7 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   
   const [quote, setQuote] = useState<{ text: string, author: string }>({ text: '', author: '' });
-
+  const [quoteFontSize, setQuoteFontSize] = useState<string>("text-xl"); 
   useEffect(() => {
     console.log('Fetching quote...');
     const fetchQuote = async () => {
@@ -45,6 +45,12 @@ const Dashboard: React.FC = () => {
         const response = await fetch('/api/quote');
         const data = await response.json();
         setQuote({ text: data.quote || 'No quote available', author: data.author || 'Unknown' });
+
+        if (data.quote && data.quote.length > 150) {
+          setQuoteFontSize("text-sm");
+        } else {
+          setQuoteFontSize("text-xl");
+        }
       } catch (error) {
         console.error('Error fetching quote:', error);
       }
@@ -52,7 +58,6 @@ const Dashboard: React.FC = () => {
   
     fetchQuote();
   }, []);
-  
 
   useEffect(() => {
     if (habits) {
@@ -147,7 +152,7 @@ const Dashboard: React.FC = () => {
         Welcome to {user?.firstName}&apos;s Habits
       </h2>
       <div className="text-center mt-4 p-4 bg-gray-100 rounded-lg">
-        <blockquote className="text-xl italic dark:text-black">{`"${quote.text}"`}</blockquote>
+        <blockquote className={`${quoteFontSize} italic dark:text-black`}>{`"${quote.text}"`}</blockquote>
         <footer className="mt-2 text-lg dark:text-black">— {quote.author}</footer>
       </div>
       
