@@ -15,18 +15,20 @@ npm i
 
 ```js
 # Deployment used by `npx convex dev`
+# https://www.api-ninjas.com/api/quotes for quote api
 CONVEX_DEPLOYMENT=
 NEXT_PUBLIC_CONVEX_URL=
 
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
+QUOTE_API=
 
 ```
 ### Setup .auth.config.ts file
 
 ```js
-create a file at convex/auth.config.ts
-input clerk JWT issuer link
+# create a file at convex/auth.config.ts
+# input clerk JWT issuer link
 
 export default {
   providers: [
